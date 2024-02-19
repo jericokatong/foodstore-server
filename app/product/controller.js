@@ -1,14 +1,27 @@
 const config = require("../../config");
 const Product = require("./model");
+const Category = require("../category/model");
+const Tag = require("../tag/model");
 const path = require("path");
 const fs = require("fs");
 
 const index = async (req, res, next) => {
   try {
-    let { limit = 10, skip = 0 } = req.query;
-    let products = await Product.find()
+    let { limit = 10, skip = 0, q = "" } = req.query;
+    let criteria = {};
+
+    if (q.length) {
+      criteria = {
+        ...criteria,
+        name: { $regex: `${q}`, $options: "i" },
+      };
+    }
+
+    let products = await Product.find(criteria)
       .limit(parseInt(limit))
-      .skip(parseInt(skip));
+      .skip(parseInt(skip))
+      .populate("category")
+      .populate("tags");
     return res.json(products);
   } catch (err) {
     next(err);
@@ -17,7 +30,29 @@ const index = async (req, res, next) => {
 
 const store = async (req, res, next) => {
   try {
-    const payload = req.body;
+    let payload = req.body;
+
+    // cek jika payload ada category
+    if (payload.category) {
+      let category = await Category.findOne({
+        name: { $regex: payload.category, $options: "i" },
+      });
+
+      if (category) {
+        payload = { ...payload, category: category._id };
+      } else {
+        delete payload.category;
+      }
+    }
+
+    // cek jika payload ada tags
+    if (payload.tags && payload.tags.length) {
+      let tags = await Tag.find({ name: { $in: payload.tags } });
+
+      if (tags.length) {
+        payload = { ...payload, tags: tags.map((tag) => tag._id) };
+      }
+    }
 
     if (req.file) {
       let tmp_path = req.file.path;
@@ -86,7 +121,31 @@ const store = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   try {
-    const payload = req.body;
+    let payload = req.body;
+    console.log(typeof payload.tags);
+
+    // cek jika payload ada category
+    if (payload.category) {
+      let category = await Category.findOne({
+        $regex: payload.category,
+        $options: "i",
+      });
+
+      if (category) {
+        payload = { ...payload, category: category._id };
+      } else {
+        delete payload.category;
+      }
+    }
+
+    // cek jika payload ada tags
+    if (payload.tags && payload.tags.length) {
+      let tags = await Tag.find({ name: { $in: payload.tags } });
+
+      if (tags.length) {
+        payload = { ...payload, tags: tags.map((tag) => tag._id) };
+      }
+    }
 
     if (req.file) {
       // contoh C:\Users\ORANG\AppData\Local\Temp\beb598ae6b2bc3907271a2f653431c85

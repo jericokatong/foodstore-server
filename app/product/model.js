@@ -20,6 +20,16 @@ const productSchema = new Schema(
     image_url: String,
     created_at: Number,
     updated_at: Number,
+    category: {
+      type: Schema.Types.ObjectId,
+      ref: "Category",
+    },
+    tags: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Tag",
+      },
+    ],
   },
   {
     timestamps: {
