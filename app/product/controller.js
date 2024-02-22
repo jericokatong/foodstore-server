@@ -7,7 +7,7 @@ const fs = require("fs");
 
 const index = async (req, res, next) => {
   try {
-    let { limit = 10, skip = 0, q = "" } = req.query;
+    let { limit = 10, skip = 0, q = "", category = "", tags = [] } = req.query;
     let criteria = {};
 
     if (q.length) {
@@ -15,6 +15,22 @@ const index = async (req, res, next) => {
         ...criteria,
         name: { $regex: `${q}`, $options: "i" },
       };
+    }
+
+    if (category.length) {
+      category = await Category.findOne({
+        name: { $regex: `${category}`, $options: "i" },
+      });
+
+      if (category) {
+        criteria = { ...criteria, category: category._id };
+      }
+    }
+
+    if (tags.length) {
+      tags = await Tag.find({ name: { $in: tags } });
+      // [ new ObjectId('65d313da8a280d43334a6fad') ]
+      criteria = { ...criteria, tags: { $in: tags.map((tag) => tag._id) } };
     }
 
     let products = await Product.find(criteria)
