@@ -5,7 +5,7 @@ const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const HASH_ROUND = 10;
 
-const userSchema = Schema(
+const userSchema = new Schema(
   {
     full_name: {
       type: String,
