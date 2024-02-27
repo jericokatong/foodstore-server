@@ -34,12 +34,18 @@ const index = async (req, res, next) => {
       criteria = { ...criteria, tags: { $in: tags.map((tag) => tag._id) } };
     }
 
+    let count = await Product.countDocuments(criteria);
+
     let products = await Product.find(criteria)
       .limit(parseInt(limit))
       .skip(parseInt(skip))
       .populate("category")
       .populate("tags");
-    return res.json(products);
+
+    return res.json({
+      data: products,
+      count,
+    });
   } catch (err) {
     next(err);
   }
@@ -148,7 +154,7 @@ const update = async (req, res, next) => {
   try {
     let policy = policyFor(req.user);
 
-    if (!policy.can("create", "Product")) {
+    if (!policy.can("update", "Product")) {
       return res.json({
         error: 1,
         message: "Anda tidak memiliki akses untuk mengupdate produk",
@@ -268,7 +274,7 @@ const destroy = async (req, res, next) => {
   try {
     let policy = policyFor(req.user);
 
-    if (!policy.can("create", "Product")) {
+    if (!policy.can("delete", "Product")) {
       return res.json({
         error: 1,
         message: "Anda tidak memiliki akses untuk menghapus produk",
