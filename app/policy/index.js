@@ -1,4 +1,8 @@
-const { AbilityBuilder, Ability } = require("@casl/ability");
+const {
+  AbilityBuilder,
+  Ability,
+  createMongoAbility,
+} = require("@casl/ability");
 
 const policies = {
   guest(user, { can }) {
@@ -28,7 +32,7 @@ const policies = {
     can("view", "DeliveryAddress");
 
     // membuat delivery address
-    can("create", "DeliveryAddress", { user_id: user._id });
+    can("create", "DeliveryAddress");
 
     // membaca delivery address miliknya
     can("read", "DeliveryAddress", { user_id: user._id });
@@ -49,15 +53,16 @@ const policies = {
 };
 
 const policyFor = (user) => {
-  let builder = new AbilityBuilder();
+  // let builder = new AbilityBuilder();
+  let builder = new AbilityBuilder(createMongoAbility);
 
   if (user && typeof policies[user.role] === "function") {
     policies[user.role](user, builder);
   } else {
     policies["guest"](user, builder);
   }
-  // sempe sini
-  return new Ability(builder);
+
+  return builder.build();
 };
 
 module.exports = {
