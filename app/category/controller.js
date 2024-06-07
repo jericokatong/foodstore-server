@@ -30,6 +30,7 @@ const store = async (req, res, next) => {
 };
 
 const update = async (req, res, next) => {
+  const policy = policyFor(req.user);
   try {
     if (!policy.can("update", "Category")) {
       return res.json({
@@ -60,6 +61,7 @@ const update = async (req, res, next) => {
 };
 
 const destroy = async (req, res, next) => {
+  const policy = policyFor(req.user);
   try {
     if (!policy.can("create", "Category")) {
       return res.json({

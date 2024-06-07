@@ -162,13 +162,14 @@ const update = async (req, res, next) => {
     }
 
     let payload = req.body;
-    console.log(typeof payload.tags);
 
     // cek jika payload ada category
     if (payload.category) {
       let category = await Category.findOne({
-        $regex: payload.category,
-        $options: "i",
+        name: {
+          $regex: payload.category,
+          $options: "i",
+        },
       });
 
       if (category) {

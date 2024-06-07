@@ -25,6 +25,8 @@ async function update(req, res, next) {
         (product) => product._id.toString() === item.product._id
       );
 
+      console.log("ini item qty: ", item.qty);
+
       return {
         product: relatedProduct._id,
         price: relatedProduct.price,
