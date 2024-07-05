@@ -6,6 +6,9 @@
     "start": "node ./bin/www",
     "dev": "set DEBUG=foodstore-server:* && nodemon start"
   },
+  "engines": {
+    "node": "16.x"
+  },
   "dependencies": {
     "@casl/ability": "^6.7.0",
     "bcrypt": "^5.1.1",
