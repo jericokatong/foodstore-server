@@ -42,6 +42,7 @@ userSchema.path("email").validate(
       const count = await this.model("User").countDocuments({ email: value });
       return !count;
     } catch (error) {
+      console.log(error);
       throw error;
     }
   },
