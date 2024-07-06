@@ -51,14 +51,14 @@ async function update(req, res, next) {
 
     return res.json(cartItems);
   } catch (error) {
-    if (err && err.name == "ValidationError") {
+    if (error && error.name == "ValidationError") {
       return res.json({
         error: 1,
         message: err.message,
         fields: err.errors,
       });
     }
-    next(err);
+    next(error);
   }
 }
 
