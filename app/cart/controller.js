@@ -54,8 +54,8 @@ async function update(req, res, next) {
     if (error && error.name == "ValidationError") {
       return res.json({
         error: 1,
-        message: err.message,
-        fields: err.errors,
+        message: error.message,
+        fields: error.errors,
       });
     }
     next(error);
@@ -77,11 +77,11 @@ async function index(req, res, next) {
 
     return res.json(items);
   } catch (error) {
-    if (err && err.name == "ValidationError") {
+    if (error && error.name == "ValidationError") {
       return res.json({
         error: 1,
-        message: err.message,
-        fields: err.errors,
+        message: error.message,
+        fields: error.errors,
       });
     }
     next(err);
