@@ -25,8 +25,6 @@ async function update(req, res, next) {
         (product) => product._id.toString() === item.product._id
       );
 
-      console.log("ini item qty: ", item.qty);
-
       return {
         product: relatedProduct._id,
         price: relatedProduct.price,
@@ -36,6 +34,8 @@ async function update(req, res, next) {
         qty: item.qty,
       };
     });
+
+    await CartItem.deleteMany({ user: req.user._id });
 
     await CartItem.bulkWrite(
       cartItems.map((item) => {

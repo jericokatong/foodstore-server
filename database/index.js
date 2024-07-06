@@ -11,7 +11,7 @@ const { dbHost, dbName, dbPort, dbUser, dbPass } = require("../config");
 
 mongoose
   .connect(
-    `mongodb+srv://${dbUser}:${dbPass}@cluster0.qftwgl1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
+    `mongodb+srv://${dbUser}:${dbPass}@cluster0.qftwgl1.mongodb.net/${dbName}?retryWrites=true&w=majority&appName=Cluster0`
   )
   .then(() => console.log("Connected to database"))
   .catch((error) => console.log(error));
