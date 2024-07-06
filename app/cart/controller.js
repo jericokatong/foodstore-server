@@ -63,6 +63,7 @@ async function update(req, res, next) {
 }
 
 async function index(req, res, next) {
+  console.log("index");
   let policy = policyFor(req.user);
 
   if (!policy.can("read", "Cart")) {
