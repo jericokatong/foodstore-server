@@ -69,7 +69,7 @@ async function index(req, res, next) {
   if (!policy.can("read", "Cart")) {
     return res.json({
       error: 1,
-      message: `You're not allowed to perform this action`,
+      message: `You're not allowed to perform this action`
     });
   }
 
