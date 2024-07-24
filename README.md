@@ -33,6 +33,8 @@
 
 ## API Documentation
 
+https://documenter.getpostman.com/view/29641235/2sA3kVm27r#b29001b2-6779-483b-ae14-310c957741c0
+
 <table>
   <tr>
     <th>Action</th>
